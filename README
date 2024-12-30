@@ -1,0 +1,234 @@
+
+#####################################
+# Constrained Polymers MD Framework # 
+#####################################
+
+
+
+###################
+# 📚 **Overview** #
+###################
+
+This project provides a Molecular Dynamics (MD) simulation framework for modeling polymer and particle systems. It supports NVE, NVT, and damped MD ensembles, with interaction models for bonds, angles, dihedrals, and non-bonded interactions. The system is built using object-oriented programming principles in C++ for clarity and modularity.
+
+
+
+
+############
+# Contents #
+############
+
+1. What is the purpose of this code?
+
+2. Compiling and running the code
+
+3. Configuration file format
+
+4. Overview of Classes
+
+
+**Example files "config_file.txt" to run an example of the In Seq model.
+
+
+
+
+========================================
+- 1. What is the purpose of this code? -
+========================================
+
+See this paper for more information:
+
+- J. A. Logan, J. Sumner, A. T. Grigas, M. D. Shattuck, C. S. O'Hern , "The effect of stereochemical constraints on the radius of gyration of folded proteins" 
+
+
+The code loads the atom positions, bonding, fixed bond angles, constrained dihedral angles necessary to run a constrained MD simulation. An external central force may be applied to collapse the polymers. The code was written to analyze coarse-grained models of proteins to find a minimal model that achieves the correct radius of gyration Rg(n) scaling, for all subpolymer lengths 2<n<N up to the full length (number of monomers) N of the polymer.
+
+The code can handle harmonic bonds between any two atoms, fixed bond angles between any three atoms, and dihedral angles constrained by a united atom dihedral potential energy between any four atoms. The atom positions, sizes, and all constraints are specified in a configuration file that is loaded into the code. More information on the configuration file format can be found below. 
+
+
+## 🚀 **Features**
+- **Multiple Ensembles:** NVE, NVT, and damped MD.
+- **Interaction Models:** Bonded, non-bonded, angular, and dihedral interactions.
+- **Verlet List Implementation:** Efficient neighbor list updates.
+- **Flexible Configuration:** Load and save simulation states.
+
+
+
+
+
+========================================
+- 2. Compiling and running the code -
+========================================
+
+
+## 🛠️ **Dependencies**
+- C++ Compiler (e.g., `g++`)
+- Standard Template Library (STL)
+
+---
+
+## 🏗️ **Build Instructions**
+1. Ensure a C++ compiler is installed (e.g., `g++`).
+2. Build the project using:
+   ```sh
+   make
+   ```
+3. Run the simulation with:
+   ```sh
+   ./<executable> <simtype> <dt> <damping> <initial_temp> <writestep> <IN> <infile> <OUT> <CF_mag> <cont_sim>
+   ```
+
+	- `<executable>: the name of the compiled executable to run code
+	- `<simtype>: choice of type of simulation to run {NVE, NVT, collapse_polymer}
+	- `<dt>: time step in system units
+	- `<damping>: the damping parameter for NVT and damped MD in system units
+	- `<initial_temp>: initial temperature of system
+	- `<writestep>: Number of steps between saving configuration and outputting files
+	- `<IN>: input path to where config file is stored
+	- `<infile>: name of config file
+	- `<OUT>: output path to save files
+	- `<CF_mag>: magnitude of central force to apply--0 for no central force
+	- `<cont_sim>: whether to continue a previous simulation (bool)
+
+### **Example Command:**
+```sh
+./simulation collapse_polymer 1e-2 1e-2 1e-5 5000000 /proteins/1vyi/ init_config_1vyi.txt /proteins/1vyi/output/ 1e-4 1
+```
+
+
+
+========================================
+- 3. Configuration file format -
+========================================
+
+
+## 📑 **Config File Format**
+The configuration file follows a strict format and is parsed in **loadConfig.cpp**.
+A configuration file is loaded every time the code is used.
+The configuration file is comma delimited
+
+
+### **1. ATOM Entries**
+Defines individual spheres:
+```text
+ATOM,<residueID>,<atomID>,<x>,<y>,<z>,<diameter>,<mass>,<vel_x>,<vel_y>,<vel_z>,<force_x>,<force_y>,<force_z>
+```
+- `Only the parameters up to, and including, mass are required. 
+- `residueID`: Residue identifier.
+- `atomID`: Atom identifier.
+- `(x, y, z)`: Position coordinates.
+- `diameter`: Sphere diameter.
+- `mass`: Sphere mass.
+- `(vel_x, vel_y, vel_z)`: Velocity components.
+- `(force_x, force_y, force_z)`: Force components.
+
+* The first atom is always the backbone atom, followed by all side chain atoms.
+* After all atoms are written, the intra-residue bonds are defined for this amino acid.
+
+
+### **2. INTRA_RESIDUE**
+Defines bonds between atoms within a residue:
+```text
+INTRA_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
+```
+
+### **3. INTER_RESIDUE**
+Defines bonds between atoms in different residues:
+```text
+INTER_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
+```
+
+### **4. BOND_ANGLE**
+Defines angular constraints between three atoms:
+```text
+BOND_ANGLE,<atomID1>,<atomID2>,<atomID3>,<stiffness>,<fixed_angle>,<current_angle>
+```
+
+### **5. BOND_DIHEDRAL**
+Defines dihedral angle between four atoms constraints:
+```text
+BOND_DIHEDRAL,<atomID1>,<atomID2>,<atomID3>,<atomID4>,<stiffness>,<current_angle>
+```
+The dihedral angle will evolve during the simulation based on the dihedral potential energy
+
+
+### **6. END**
+Marks the end of the configuration file:
+```text
+END
+```
+
+Ensure every section is properly formatted, with no missing fields.
+
+
+
+
+
+========================================
+- 4. Overview of Classes -
+========================================
+
+## 🧠 **Classes Overview**
+
+### **Vector3D** *(Vector3D.h)*
+- **Purpose:** Represents 3D vectors.
+- **Key Variables:** `double x, y, z`
+- **Key Methods:** Arithmetic operations, normalization, dot product, cross product.
+
+### **Sphere** *(Sphere.h)*
+- **Purpose:** Represents individual spheres.
+- **Key Variables:** `residueID`, `atomID`, `diameter`, `mass`
+- **Key Methods:** `setPosition`, `setVelocity`, `applyForce`, distance calculations.
+
+### **Bond** *(Bond.h)*
+- **Purpose:** Represents bonded interactions between spheres.
+- **Key Variables:** `sphereIDs`, `stiffness`
+- **Key Methods:** `print`
+
+### **BondAngle** *(BondAngle.h)*
+- **Purpose:** Angular bond constraints.
+- **Key Variables:** `fixed_angle`, `current_angle`
+
+### **BondDihedral** *(BondDihedral.h)*
+- **Purpose:** Dihedral bond constraints.
+- **Key Variables:** `current_angle`
+
+### **Residue** *(Residue.h)*
+- **Purpose:** Represents a residue.
+- **Key Variables:** `backbone`, `side_chain`, `bonds`
+- **Key Methods:** `addBackBone`, `addBond`
+
+### **Simulation** *(Simulation.h)*
+- **Purpose:** Manages simulation properties.
+- **Key Methods:** `getCOM`, `computeRg`
+
+### **InteractionManager** *(InteractionManager.h)*
+- **Purpose:** Manages forces and energies.
+- **Key Methods:** `computeInteractions`, `computeNonBondedInteractions`
+
+### **MD** *(MD.h)*
+- **Purpose:** Core MD simulation class.
+- **Key Methods:** `initializeTemp`, `runNVE`, `runNVT`, `runDampedMD`
+
+### **SimulationArgs** *(SimulationArgs.h)*
+- **Purpose:** Parses simulation arguments.
+- **Key Methods:** `parseCommandLine`
+
+
+---
+
+
+## 📊 **Output Files**
+- `config_file.txt`: Simulation state.
+- `final_config.xyzr`: Final particle configuration. This can be loaded into the code to continue a simulation.
+- `temp_rg_Etot.txt`: Tracks temperature, radius of gyration, total energy, and max force mag on any sphere.
+
+
+
+
+
+
+
+
+
+

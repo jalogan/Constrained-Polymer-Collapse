@@ -22,7 +22,9 @@ This project provides a Molecular Dynamics (MD) simulation framework for modelin
 
 2. Compiling and running the code
 
-3. Configuration file format
+3. Using the code
+	a. Getting Started
+	b. Configuration file format
 
 4. Overview of Classes
 
@@ -98,68 +100,76 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 
 ========================================
-- 3. Configuration file format -
+- b. Using the code -
 ========================================
 
+	a. Getting started
 
-## 📑 **Config File Format**
-The configuration file follows a strict format and is parsed in **loadConfig.cpp**.
-A configuration file is loaded every time the code is used.
-The configuration file is comma delimited
+		- Create a configuration file for the polymer you want to simulate. The configuration file format is described in the next section.
+		- Choose the variables needed as command-line args, such as simulation type, whether to include a central force, etc. This is explained in Section 3 abpve.
+		- You may want to change some parameters in main.cpp, such as the number of steps to run a preliminary NVE (if using simtype="collapse_polymer")
+		- An initial time step, dt, is set, but may be adapted during the simulation based on the average power.
 
-
-### **1. ATOM Entries**
-Defines individual spheres:
-```text
-ATOM,<residueID>,<atomID>,<x>,<y>,<z>,<diameter>,<mass>,<vel_x>,<vel_y>,<vel_z>,<force_x>,<force_y>,<force_z>
-```
-- `Only the parameters up to, and including, mass are required. 
-- `residueID`: Residue identifier.
-- `atomID`: Atom identifier.
-- `(x, y, z)`: Position coordinates.
-- `diameter`: Sphere diameter.
-- `mass`: Sphere mass.
-- `(vel_x, vel_y, vel_z)`: Velocity components.
-- `(force_x, force_y, force_z)`: Force components.
-
-* The first atom is always the backbone atom, followed by all side chain atoms.
-* After all atoms are written, the intra-residue bonds are defined for this amino acid.
-
-
-### **2. INTRA_RESIDUE**
-Defines bonds between atoms within a residue:
-```text
-INTRA_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
-```
-
-### **3. INTER_RESIDUE**
-Defines bonds between atoms in different residues:
-```text
-INTER_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
-```
-
-### **4. BOND_ANGLE**
-Defines angular constraints between three atoms:
-```text
-BOND_ANGLE,<atomID1>,<atomID2>,<atomID3>,<stiffness>,<fixed_angle>,<current_angle>
-```
-
-### **5. BOND_DIHEDRAL**
-Defines dihedral angle between four atoms constraints:
-```text
-BOND_DIHEDRAL,<atomID1>,<atomID2>,<atomID3>,<atomID4>,<stiffness>,<current_angle>
-```
-The dihedral angle will evolve during the simulation based on the dihedral potential energy
-
-
-### **6. END**
-Marks the end of the configuration file:
-```text
-END
-```
-
-Ensure every section is properly formatted, with no missing fields.
-
+	b. Configuration file format
+		
+		## 📑 **Config File Format**
+		The configuration file follows a strict format and is parsed in **loadConfig.cpp**.
+		A configuration file is loaded every time the code is used.
+		The configuration file is comma delimited
+		
+		
+		### **1. ATOM Entries**
+		Defines individual spheres:
+		```text
+		ATOM,<residueID>,<atomID>,<x>,<y>,<z>,<diameter>,<mass>,<vel_x>,<vel_y>,<vel_z>,<force_x>,<force_y>,<force_z>
+		```
+		- `Only the parameters up to, and including, mass are required. 
+		- `residueID`: Residue identifier.
+		- `atomID`: Atom identifier.
+		- `(x, y, z)`: Position coordinates.
+		- `diameter`: Sphere diameter.
+		- `mass`: Sphere mass.
+		- `(vel_x, vel_y, vel_z)`: Velocity components.
+		- `(force_x, force_y, force_z)`: Force components.
+		
+		* The first atom is always the backbone atom, followed by all side chain atoms.
+		* After all atoms are written, the intra-residue bonds are defined for this amino acid.
+		
+		
+		### **2. INTRA_RESIDUE**
+		Defines bonds between atoms within a residue:
+		```text
+		INTRA_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
+		```
+		
+		### **3. INTER_RESIDUE**
+		Defines bonds between atoms in different residues:
+		```text
+		INTER_RESIDUE,<atomID1>,<atomID2>,<stiffness>,<equil_length>
+		```
+		
+		### **4. BOND_ANGLE**
+		Defines angular constraints between three atoms:
+		```text
+		BOND_ANGLE,<atomID1>,<atomID2>,<atomID3>,<stiffness>,<fixed_angle>,<current_angle>
+		```
+		
+		### **5. BOND_DIHEDRAL**
+		Defines dihedral angle between four atoms constraints:
+		```text
+		BOND_DIHEDRAL,<atomID1>,<atomID2>,<atomID3>,<atomID4>,<stiffness>,<current_angle>
+		```
+		The dihedral angle will evolve during the simulation based on the dihedral potential energy
+		
+		
+		### **6. END**
+		Marks the end of the configuration file:
+		```text
+		END
+		```
+		
+		Ensure every section is properly formatted, with no missing fields.
+		
 
 
 

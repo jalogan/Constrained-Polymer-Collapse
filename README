@@ -117,7 +117,7 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 		The configuration file follows a strict format and is parsed in **loadConfig.cpp**.
 		A configuration file is loaded every time the code is used.
 		The configuration file is comma delimited
-		
+		** Residue IDs and atom IDs should start at 0 and all atoms should count in order from zero, starting with the backbone atom followed by the residue's side chain atoms before moving to the next residue's backbone atom.
 		
 		### 1. ATOM Entries
 		Defines individual spheres:

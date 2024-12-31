@@ -29,7 +29,8 @@ This project provides a Molecular Dynamics (MD) simulation framework for modelin
 4. Overview of Classes
 
 
-** Included example config file "5tkw_config_file_Inseq.txt" to run an example of the In Seq model for protein 5TKW.
+** Included example config file "5tkw_config_file_InSeq.txt" to run an example of the In Seq model for protein 5TKW.
+	- This file demonstrates using single atom side chains, bond angles, bond dihedrals, inter- and intra-residue bonds.
 
 
 

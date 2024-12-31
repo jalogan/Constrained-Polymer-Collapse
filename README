@@ -154,6 +154,7 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 		```text
 		BOND_ANGLE,<atomID1>,<atomID2>,<atomID3>,<stiffness>,<fixed_angle>,<current_angle>
 		```
+		All angles are in radians.
 		
 		### 5. BOND_DIHEDRAL
 		Defines dihedral angle between four atoms constraints:
@@ -161,7 +162,7 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 		BOND_DIHEDRAL,<atomID1>,<atomID2>,<atomID3>,<atomID4>,<stiffness>,<current_angle>
 		```
 		The dihedral angle will evolve during the simulation based on the dihedral potential energy
-		
+		All angles are in radians.
 		
 		### 6. END
 		Marks the end of the configuration file:

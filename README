@@ -29,7 +29,7 @@ This project provides a Molecular Dynamics (MD) simulation framework for modelin
 4. Overview of Classes
 
 
-**Example files "config_file.txt" to run an example of the In Seq model.
+** Included example config file "5tkw_config_file_Inseq.txt" to run an example of the In Seq model for protein 5TKW.
 
 
 

@@ -100,13 +100,13 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 
 ========================================
-- b. Using the code -
+- 3. Using the code -
 ========================================
 
 	a. Getting started
 
 		- Create a configuration file for the polymer you want to simulate. The configuration file format is described in the next section.
-		- Choose the variables needed as command-line args, such as simulation type, whether to include a central force, etc. This is explained in Section 3 abpve.
+		- Choose the variables needed as command-line args, such as simulation type, whether to include a central force, etc. This is explained in Section 3 above.
 		- You may want to change some parameters in main.cpp, such as the number of steps to run a preliminary NVE (if using simtype="collapse_polymer")
 		- An initial time step, dt, is set, but may be adapted during the simulation based on the average power.
 

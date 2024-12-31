@@ -65,53 +65,12 @@ int main(int argc, char *argv[])
 
 	// Make collection of all possible bonds that are not already made
 	sim.makeNonPermanentBondPairs();
-/*
-	std::cout<<"# non perm bond pairs: "<<sim.all_non_perm_bond_pairs.size()<<"\n\n";
-	for(const auto& bond : sim.all_non_perm_bond_pairs)
-	{
-		std::cout<<bond->sphereIDs[0]<<", "<<bond->sphereIDs[1]<<"\n";
-	}
-*/
 
 
-
-// #################################
-
-/*
-	// Check initial system
-	for(auto sph : sim.spheres)
-	{
-		sph->print();
-	}
-*/
-
+	
 	std::cout<<"# Backbone bonds: "<<sim.backbone_pairs.size()<<"\n";
 	std::cout<<"# Bond Angle constraints: "<<sim.bond_angles.size()<<"\n";
 	std::cout<<"# Dihedral Angle constraints: "<<sim.bond_dihedrals.size()<<"\n";
-/*
-	std::cout<<"intra-residue bonds:\n";
-	for(auto res : sim.residues)
-	{
-		for(auto bond : res.bonds)
-		{
-			bond.print();
-		}
-	}
-*/
-
-/*	std::cout<<"\n***************************\n";
-
-	std::cout<<"inter-residue bonds:\n";
-	for(auto bond : sim.backbone_pairs)
-	{
-		bond.print();
-	}
-	std::cout<<"\n";
-*/
-
-// #################################
-
-
 
 
 	// Find the min/max diameter
@@ -147,6 +106,8 @@ int main(int argc, char *argv[])
 
 
 
+
+	
 	// Run one of the simtypes
 	std::transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower);
 

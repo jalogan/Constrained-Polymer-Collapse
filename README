@@ -53,8 +53,8 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 - Multiple Ensembles: NVE, NVT, and damped MD.
 - Interaction Models: Bonded, non-bonded, angular, and dihedral interactions.
 - Verlet List Implementation: Efficient neighbor list updates.
+- Central force to collapse polymers, weighted by particle size to avoid size segregation.
 - Flexible Configuration: Load and save simulation states.
-
 
 
 

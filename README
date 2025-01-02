@@ -50,10 +50,10 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 
 ## 🚀 Features
-- **Multiple Ensembles:** NVE, NVT, and damped MD.
-- **Interaction Models:** Bonded, non-bonded, angular, and dihedral interactions.
-- **Verlet List Implementation:** Efficient neighbor list updates.
-- **Flexible Configuration:** Load and save simulation states.
+- Multiple Ensembles: NVE, NVT, and damped MD.
+- Interaction Models: Bonded, non-bonded, angular, and dihedral interactions.
+- Verlet List Implementation: Efficient neighbor list updates.
+- Flexible Configuration: Load and save simulation states.
 
 
 

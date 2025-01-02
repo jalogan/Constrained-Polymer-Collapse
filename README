@@ -135,8 +135,8 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 		- `(vel_x, vel_y, vel_z)`: Velocity components.
 		- `(force_x, force_y, force_z)`: Force components.
 		
-		* The first atom is always the backbone atom, followed by all side chain atoms.
-		* After all atoms are written, the intra-residue bonds are defined for this amino acid.
+		** The first atom is always the backbone atom, followed by all side chain atoms.
+		** After all atoms are written, the intra-residue bonds are defined for this amino acid.
 		
 		
 		### 2. INTRA_RESIDUE

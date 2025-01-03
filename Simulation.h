@@ -87,12 +87,6 @@ class Simulation
 	}
 
 
-	// Permanent bonded pair of sphere IDs that are not pairs of backbones
-//	void addPermBondPair(int sphere1ID, int sphere2ID, double bond_stiffness, double sphere1diam, double sphere2diam)
-//	{	
-//		bonded_pairs.push_back(BondPair({sphere1ID, sphere2ID}, bond_stiffness, 0.5*(sphere1diam + sphere2diam)));
-//	}
-
 	// Permanent bonds between triplets of sphere IDs that make up bond angle
 	void addBondAngle(int sphere1ID, int sphere2ID, int sphere3ID, std::unordered_map<int, std::shared_ptr<Sphere>>& spheremap,  double bond_stiffness, double fixed_angle, double current_angle)
 	{	
@@ -107,15 +101,6 @@ class Simulation
 
 
 
-
-	// Temporary Bonds //
-/*
-	// Pairs of sphere IDs that are interacting temporarily through repulsive/attractive potentials
-	void addTempBondPair(int sphere1ID, int sphere2ID, std::unordered_map<int, std::shared_ptr<Sphere>>& spheremap, double sphere1diam, double sphere2diam, double bond_stiffness=1.0)
-	{	
-		nonbonded_pairs.push_back(BondPair({sphere1ID, sphere2ID}, spheremap, bond_stiffness, 0.5*(sphere1diam + sphere2diam)));
-	}
-*/
 
 
 
@@ -178,72 +163,44 @@ class Simulation
 		
 				sphereMap.clear();
 
-				// If atomIDs match the index in the spheres vector, it's easy
-				if(Natoms>=i && Natoms>=j && spheres[i]->atomID==atomIDa && spheres[j]->atomID==atomIDb)
-				{
-					sphereMap[i] = spheres[i];
-					sphereMap[j] = spheres[j];
-	
-					if(atomIDa < atomIDb)
+				spha_found = 0;
+				sphb_found = 0;
+				for(const auto& sph : spheres)
+				{					
+					if(sph->atomID==atomIDa)
 					{
-						if(bonded_pairs.find({atomIDa,atomIDb}) == bonded_pairs.end())
-						{
-							all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDa, atomIDb}, sphereMap, 1, 0.5*(spheres[i]->diameter + spheres[j]->diameter)) );
-						}
+						spha_ptr = sph;
+						spha_found = 1;
 					}
-					else
+					else if(sph->atomID==atomIDb)
 					{
-						if(bonded_pairs.find({atomIDb,atomIDa}) == bonded_pairs.end())
-						{
-							all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDb, atomIDa}, sphereMap, 1, 0.5*(spheres[j]->diameter + spheres[i]->diameter)) );
-						}
+						sphb_ptr = sph;
+						sphb_found = 1;
 					}
-
+					if(spha_found && sphb_found)
+					{
+						sphereMap[atomIDa] = spha_ptr;
+						sphereMap[atomIDb] = sphb_ptr;
+						break;
+					}
 				}
-				// otherwise we need to find the correct sphere object...
+
+				if(atomIDa < atomIDb)
+				{
+					if(bonded_pairs.find({atomIDa,atomIDb}) == bonded_pairs.end())
+					{
+						all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDa, atomIDb}, sphereMap, 1, 0.5*(spha_ptr->diameter + sphb_ptr->diameter)) );
+
+					}
+				}
 				else
 				{
-					spha_found = 0;
-					sphb_found = 0;
-					for(const auto& sph : spheres)
-					{					
-						if(sph->atomID==atomIDa)
-						{
-							spha_ptr = sph;
-							spha_found = 1;
-						}
-						else if(sph->atomID==atomIDb)
-						{
-							sphb_ptr = sph;
-							sphb_found = 1;
-						}
-						if(spha_found && sphb_found)
-						{
-							sphereMap[atomIDa] = spha_ptr;
-							sphereMap[atomIDb] = sphb_ptr;
-							break;
-						}
-					}
-
-					if(atomIDa < atomIDb)
+					if(bonded_pairs.find({atomIDb,atomIDa}) == bonded_pairs.end())
 					{
-						if(bonded_pairs.find({atomIDa,atomIDb}) == bonded_pairs.end())
-						{
-							all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDa, atomIDb}, sphereMap, 1, 0.5*(spha_ptr->diameter + sphb_ptr->diameter)) );
+						all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDb, atomIDa}, sphereMap, 1, 0.5*(sphb_ptr->diameter + spha_ptr->diameter)) );
 
-						}
 					}
-					else
-					{
-						if(bonded_pairs.find({atomIDb,atomIDa}) == bonded_pairs.end())
-						{
-							all_non_perm_bond_pairs.push_back( std::make_shared<BondPair>(std::initializer_list<int>{atomIDb, atomIDa}, sphereMap, 1, 0.5*(sphb_ptr->diameter + spha_ptr->diameter)) );
-
-						}
-					}
-
 				}
-			
 
 			}
 		}

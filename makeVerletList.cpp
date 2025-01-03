@@ -43,12 +43,11 @@ void MD::makeVerletList(bool initialize)
 		// Remake nonbonded_pairs in Simulation.h
 		// Iterate through all pairs of spheres that are not permanently bonded
 		// These are all the bonds that may be temporarily interacting
-		std::unordered_map<int, std::shared_ptr<Sphere> > sphereMap;
+
 		int sphaID, sphbID;
 		bool spha_found, sphb_found;
 		std::shared_ptr<Sphere> spha_ptr;
 		std::shared_ptr<Sphere> sphb_ptr;
-		//double distsq;
 		double dist;
 
 
@@ -56,19 +55,16 @@ void MD::makeVerletList(bool initialize)
 		{
 			const auto& bond = sim->all_non_perm_bond_pairs[bond_ind];
 
-			sphaID = bond->sphereIDs[0];
-			sphbID = bond->sphereIDs[1];
+			// Fetch the Sphere objects from the Bond sphereMap
 
-			sphereMap.clear();
-
-			// If atomIDs match the index in the spheres vector, it's easy
-			if(sim->Natoms>=sphaID && sim->Natoms>=sphbID && sim->spheres[sphaID]->atomID==sphaID && sim->spheres[sphbID]->atomID==sphbID)
+			auto it0 = bond->sphereMap.find(bond->sphereIDs[0]);
+			auto it1 = bond->sphereMap.find(bond->sphereIDs[1]);
+			if(it0 != bond->sphereMap.end() && it1 != bond->sphereMap.end())
 			{
-				auto* spha = sim->spheres[sphaID].get();
-				auto* sphb = sim->spheres[sphbID].get();
+				auto* spha = it0->second.get();
+				auto* sphb = it1->second.get();
 
-
-    			// Get distance between spheres
+				// Get distance between spheres
 				dist = spha->distij(sphb, 0);
 			
 				// bond length for two particles that are not bonded is the sum of their radii
@@ -76,46 +72,8 @@ void MD::makeVerletList(bool initialize)
 				{
 					sim->nonbonded_pairs.push_back(bond_ind);
 				}
-
-			}	
-
-			// otherwise we need to find the correct sphere object...
-			else
-			{
-				spha_found = 0;
-				sphb_found = 0;
-				for(const auto& sph : sim->spheres)
-				{					
-					if(sph->atomID==sphaID)
-					{
-						spha_ptr = sph;
-						spha_found = 1;
-					}
-					else if(sph->atomID==sphbID)
-					{
-						sphb_ptr = sph;
-						sphb_found = 1;
-					}
-					if(spha_found && sphb_found)
-					{
-						auto* spha = spha_ptr.get();
-						auto* sphb = sphb_ptr.get();
-						sphereMap[sphaID] = spha_ptr;
-						sphereMap[sphbID] = sphb_ptr;
-
-						// Get distance between spheres
-						dist = spha->distij(sphb, 0);						
-
-						// bond length for two particles that are not bonded is the sum of their radii
-						if(dist/bond->bond_length <= verlet_skin)
-						{
-							sim->nonbonded_pairs.push_back(bond_ind);
-						}
-						break;
-					}
-				}
-
 			}
+
 
 		}		
 

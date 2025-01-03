@@ -26,35 +26,5 @@ class Bond
 
 
 
-
-
-
-
-/*
-// Hold pairs of sphere IDs that are bonded
-// This may mean permanently bonded, as in the backbone spheres
-// or temporarily bonded, as in two spheres that happen to be close at the moment and interacting
-
-
-class Bond
-{
-	public:
-
-		int sphere1ID;
-		int sphere2ID;
-
-		Bond(int sph1, int sph2) : sphere1ID{sph1}, sphere2ID{sph2} {}
-
-
-		void print()
-		{
-			std::cout<<"Bond sphere IDs: "<<sphere1ID<<", "<<sphere2ID<<"\n";
-		}
-
-};
-*/
-
-
-
 #endif
 

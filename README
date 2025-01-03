@@ -95,7 +95,7 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 ### Example Command:
 ```sh
-./simulation collapse_polymer 1e-2 1e-2 1e-5 5000000 /proteins/1vyi/ init_config_1vyi.txt /proteins/1vyi/output/ 1e-4 1
+./polymer collapse_polymer 1e-2 1e-2 1e-5 5000000 /proteins/1vyi/ init_config_1vyi.txt /proteins/1vyi/output/ 1e-4 1
 ```
 
 

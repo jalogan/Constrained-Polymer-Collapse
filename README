@@ -233,8 +233,8 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 
 ## 📊 Output Files
-- `config_file.txt`: Simulation state.
-- `final_config.xyzr`: Final particle configuration. This can be loaded into the code to continue a simulation.
+- `config_file.txt`: Simulation state. This can be loaded into the code to continue a simulation.
+- `final_config.xyzr`: Final particle configuration: atom ID, position (x,y,z) and radius (r) of each atom, and residue ID.
 - `temp_rg_Etot.txt`: Tracks temperature, radius of gyration, total energy, and max force mag on any sphere.
 
 

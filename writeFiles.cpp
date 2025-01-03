@@ -119,6 +119,8 @@ void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
 	output.open(OUT+final_config_file, std::ios::out);
 	if(output.is_open())
 	{
+		output<<"atomID\tx\ty\tz\tradius\tresidueID\n";
+
 		// Backbone atoms
 		for(const auto& res : sim->residues)
 		{

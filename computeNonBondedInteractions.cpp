@@ -15,7 +15,6 @@ void InteractionManager::computeNonBondedInteractions()
 
 	for(const auto& bond_ind : sim->nonbonded_pairs)
 	{
-		//bond.print();
 		const auto& bond = sim->all_non_perm_bond_pairs[bond_ind];
 
 		auto it0 = bond->sphereMap.find(bond->sphereIDs[0]);

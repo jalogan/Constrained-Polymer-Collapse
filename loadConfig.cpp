@@ -133,7 +133,7 @@ void MD::loadConfig()
 				sphereMap.clear();
 
 				// If atomIDs match the index in the spheres vector, it's easy
-				if(Nsph>=sphaID && Nsph>=sphbID &&  loadedspheres[sphaID]->atomID==sphaID && loadedspheres[sphbID]->atomID==sphbID)
+				if(Nsph>=sphaID && Nsph>=sphbID && loadedspheres[sphaID]->atomID==sphaID && loadedspheres[sphbID]->atomID==sphbID)
 				{
 
 					sphereMap[sphaID] = loadedspheres[sphaID];

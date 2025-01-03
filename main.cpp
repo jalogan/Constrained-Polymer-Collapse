@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
 	// Make collection of all possible bonds that are not already made
 	sim.makeNonPermanentBondPairs();
 
-
-	
 	std::cout<<"# Backbone bonds: "<<sim.backbone_pairs.size()<<"\n";
 	std::cout<<"# Bond Angle constraints: "<<sim.bond_angles.size()<<"\n";
 	std::cout<<"# Dihedral Angle constraints: "<<sim.bond_dihedrals.size()<<"\n";
+
+
 
 
 	// Find the min/max diameter
@@ -106,8 +106,6 @@ int main(int argc, char *argv[])
 
 
 
-
-	
 	// Run one of the simtypes
 	std::transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower);
 

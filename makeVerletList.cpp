@@ -44,10 +44,10 @@ void MD::makeVerletList(bool initialize)
 		// Iterate through all pairs of spheres that are not permanently bonded
 		// These are all the bonds that may be temporarily interacting
 
-		int sphaID, sphbID;
-		bool spha_found, sphb_found;
-		std::shared_ptr<Sphere> spha_ptr;
-		std::shared_ptr<Sphere> sphb_ptr;
+		//int sphaID, sphbID;
+		//bool spha_found, sphb_found;
+		//std::shared_ptr<Sphere> spha_ptr;
+		//std::shared_ptr<Sphere> sphb_ptr;
 		double dist;
 
 
@@ -56,7 +56,6 @@ void MD::makeVerletList(bool initialize)
 			const auto& bond = sim->all_non_perm_bond_pairs[bond_ind];
 
 			// Fetch the Sphere objects from the Bond sphereMap
-
 			auto it0 = bond->sphereMap.find(bond->sphereIDs[0]);
 			auto it1 = bond->sphereMap.find(bond->sphereIDs[1]);
 			if(it0 != bond->sphereMap.end() && it1 != bond->sphereMap.end())
@@ -77,18 +76,6 @@ void MD::makeVerletList(bool initialize)
 
 		}		
 
-		// Update the verlet skin
-		// verlet_skin_mult is defined in MD.h and can be changed
-		// if it is >1 then the verlet list is updated less often.
-		// if it is <1 it is safer and the verlet list is updated before the spheres move 
-		// as much as they moved the previous amounte between verlet list updates
-
-		//verlet_skin = (max_disp + max_disp_2) * verlet_skin_mult;
-
-		// smoother transitions
-
-		//verlet_skin = 0.9*verlet_skin + 0.1*(max_disp + max_disp_2)*verlet_skin_mult;
-		//std::cout<<"verlet_skin: "<<verlet_skin<<"\n";
 	}
 
 }

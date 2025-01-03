@@ -1,7 +1,6 @@
 #include <cmath>
 #include <numeric>
 #include <vector>
-
 #include "MD.h"
 
 
@@ -13,15 +12,12 @@
 void MD::adjust_dt()
 {
 
-	//double power = 0.0;
 	double avg_power = 0.0;
 
 
 	for(const auto& sph : sim->spheres)
 	{
-		//power += std::inner_product(sph->force.begin(), sph->force.end(), sph->velocity.begin(), 0.0);
 		avg_power += sph->force.dot(sph->velocity);
-		//avg_power += power;
 	}
 	avg_power /= sim->Natoms;
 
@@ -40,8 +36,6 @@ void MD::adjust_dt()
 			dt_dec = 0;
 			dt_inc = 0;
 			deltat *= scale_dt;
-			//change_dt = 0;
-			//std::cout<<"\n dt = "<<deltat<<"\n";
 		}
 	}
 	else if(avg_power > 0.0 && deltat < maxdt)
@@ -52,8 +46,6 @@ void MD::adjust_dt()
 			dt_inc = 0;
 			dt_dec = 0;
 			deltat /= scale_dt;
-			//change_dt = 0;
-			//std::cout<<"\n dt = "<<deltat<<"\n";
 		}
 	}
 

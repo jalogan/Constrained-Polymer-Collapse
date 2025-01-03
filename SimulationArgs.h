@@ -38,8 +38,8 @@ struct SimulationArgs
 
 void printUsage() 
 {
-   std::cout << "Usage: ./simulation <simtype> <dt> <damping> <initial_temp> <writestep> <IN> <infile> <OUT> <CF_mag> <cont_sim>\n"
-             << "Example: ./simulation NVE 0.01 0.01 1e-5 1000000 /Desktop/config_files/ init_config.txt /Desktop/config_files/output/ 1e-4 0\n";
+   std::cout << "Usage: ./polymer <simtype> <dt> <damping> <initial_temp> <writestep> <IN> <infile> <OUT> <CF_mag> <cont_sim>\n"
+             << "Example: ./polymer NVE 0.01 0.01 1e-5 1000000 /Desktop/config_files/ init_config.txt /Desktop/config_files/output/ 1e-4 0\n";
 }
 
 

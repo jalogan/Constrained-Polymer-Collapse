@@ -120,7 +120,7 @@ The code can handle harmonic bonds between any two atoms, fixed bond angles betw
 
 		* Important Notes *
 			** Residue IDs and atom IDs should start at 0
-			** All atom IDs should count in order from zero, starting with the backbone atom followed by the residue's side chain atoms before moving to the next residue's backbone atom.
+			** It should not need to be the case that all atom IDs count in order from zero, starting with the backbone atom followed by the residue's side chain atoms before moving to the next residue's backbone atom.
 			** INTRA_RESIDUE must follow ATOM. Any intra-residue bonds must follow directory after the definition of the ATOMs for that residue. For each residue defined, all atoms are listed starting with ATOM followed by all INTRA_RESIDUE bonds before defining the next residue. 
 
 		### 1. ATOM Entries

@@ -44,12 +44,7 @@ void MD::makeVerletList(bool initialize)
 		// Iterate through all pairs of spheres that are not permanently bonded
 		// These are all the bonds that may be temporarily interacting
 
-		//int sphaID, sphbID;
-		//bool spha_found, sphb_found;
-		//std::shared_ptr<Sphere> spha_ptr;
-		//std::shared_ptr<Sphere> sphb_ptr;
 		double dist;
-
 
 		for(int bond_ind=0; bond_ind<sim->num_non_perm_bond_pairs; ++bond_ind)
 		{

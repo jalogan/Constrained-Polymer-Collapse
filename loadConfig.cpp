@@ -139,8 +139,11 @@ void MD::loadConfig()
 					sphereMap[sphaID] = loadedspheres[sphaID];
 					sphereMap[sphbID] = loadedspheres[sphbID];
 
-					newres.addBond(sphaID, sphbID, sphereMap, stiffness, equil_length);
-					sim->bonded_pairs.insert({sphaID, sphbID});
+					int minID = std::min(sphaID, sphbID);
+                    			int maxID = std::max(sphaID, sphbID);
+					
+					newres.addBond(minID, maxID, sphereMap, stiffness, equil_length);
+					sim->bonded_pairs.insert({minID, maxID});
 				}
 				// otherwise we need to find the correct sphere object...
 				else
@@ -167,8 +170,11 @@ void MD::loadConfig()
 						}
 					}
 
-					newres.addBond(sphaID, sphbID, sphereMap, stiffness, equil_length);
-					sim->bonded_pairs.insert({sphaID, sphbID});
+					int minID = std::min(sphaID, sphbID);
+                    			int maxID = std::max(sphaID, sphbID);
+					
+					newres.addBond(minID, maxID, sphereMap, stiffness, equil_length);
+					sim->bonded_pairs.insert({minID, maxID});
 
 				}
 
@@ -190,8 +196,11 @@ void MD::loadConfig()
 				sphereMap[sphaID] = loadedspheres[sphaID];
 				sphereMap[sphbID] = loadedspheres[sphbID];
 
-				sim->addBackBonePair(sphaID, sphbID, sphereMap, stiffness, equil_length);
-				sim->bonded_pairs.insert({sphaID, sphbID});
+				int minID = std::min(sphaID, sphbID);
+                    		int maxID = std::max(sphaID, sphbID);
+				
+				sim->addBackBonePair(minID, maxID, sphereMap, stiffness, equil_length);
+				sim->bonded_pairs.insert({minID, maxID});
 
 			}
 			// otherwise we need to find the correct sphere object...
@@ -220,8 +229,11 @@ void MD::loadConfig()
 
 				}
 
-				sim->addBackBonePair(sphaID, sphbID, sphereMap, stiffness, equil_length);
-				sim->bonded_pairs.insert({sphaID, sphbID});
+				int minID = std::min(sphaID, sphbID);
+                    		int maxID = std::max(sphaID, sphbID);
+				
+				sim->addBackBonePair(minID, maxID, sphereMap, stiffness, equil_length);
+				sim->bonded_pairs.insert({minID, maxID});
 			}
 
 		}

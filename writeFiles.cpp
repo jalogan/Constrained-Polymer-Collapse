@@ -72,6 +72,10 @@ void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
 			{	
 				output<<"INTRA_RESIDUE,"<<bond.sphereIDs[0]<<","<<bond.sphereIDs[1]<<","<<bond.stiffness<<","<<bond.bond_length<<"\n";
 			}
+			if(res.bonds.empty())
+            {
+                output<<"INTRA_RESIDUE\n";
+            }
 		}
 
 

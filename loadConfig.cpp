@@ -34,6 +34,22 @@ void MD::loadConfig()
 	Residue newres;
 	int Nsph=0;
 
+
+	// Handling single-atom residues
+	int current_resID = -1; // track residue boundaries when INTRA_RESIDUE is absent
+	auto finalizeBufferedResidue = [&]() {
+		if(newspheres.empty()) return;
+		// Add backbone and side chain spheres to residue
+		newres.addBackBone(newspheres[0]);
+		newspheres.erase(newspheres.begin());
+		newres.addSideChain(newspheres); // empty OK for 1-atom residues
+		newspheres.clear();
+		sim->addResidues(newres);
+		newres = Residue();
+		current_resID = -1;
+	};
+
+
 	int atom_counter = 0;
 	int res_counter = 0;
 
@@ -63,6 +79,15 @@ void MD::loadConfig()
 		{
 			sim->addResidues(newres);
 			newres = Residue();
+			current_resID = -1;
+		}
+
+		// If we are leaving an ATOM block without ever seeing INTRA_RESIDUE for that residue,
+		// we still need to finalize and add the residue (covers ATOM-only residues, including
+		// single-atom residues, when the next label is INTER_RESIDUE/BOND_ANGLE/BOND_DIHEDRAL/END/etc.).
+		if(last_label=="ATOM" && label!="ATOM" && label!="INTRA_RESIDUE")
+		{
+			finalizeBufferedResidue();
 		}
 
 
@@ -73,7 +98,17 @@ void MD::loadConfig()
 
 		if(label=="ATOM")
 		{
-			resID = std::stoi(values[0]);
+			int next_resID = std::stoi(values[0]);
+
+			// If INTRA_RESIDUE is absent, residues are delimited by residueID changes inside the ATOM section.
+			// Finalize the previous residue when we encounter the first ATOM of the next residue.
+			if(current_resID != -1 && next_resID != current_resID)
+			{
+				finalizeBufferedResidue();
+			}
+			current_resID = next_resID;
+
+			resID = next_resID;
 			res_counter = resID+1;
 
 			atomID = std::stoi(values[1]);
@@ -105,7 +140,6 @@ void MD::loadConfig()
 			loadedspheres.push_back(newspheres.back());
 			Nsph++;
 			
-
 			// Create sphere object
 			sim->addSpheres(newspheres.back());
 
@@ -139,11 +173,8 @@ void MD::loadConfig()
 					sphereMap[sphaID] = loadedspheres[sphaID];
 					sphereMap[sphbID] = loadedspheres[sphbID];
 
-					int minID = std::min(sphaID, sphbID);
-                    			int maxID = std::max(sphaID, sphbID);
-					
-					newres.addBond(minID, maxID, sphereMap, stiffness, equil_length);
-					sim->bonded_pairs.insert({minID, maxID});
+					newres.addBond(sphaID, sphbID, sphereMap, stiffness, equil_length);
+					sim->bonded_pairs.insert({sphaID, sphbID});
 				}
 				// otherwise we need to find the correct sphere object...
 				else
@@ -170,11 +201,8 @@ void MD::loadConfig()
 						}
 					}
 
-					int minID = std::min(sphaID, sphbID);
-                    			int maxID = std::max(sphaID, sphbID);
-					
-					newres.addBond(minID, maxID, sphereMap, stiffness, equil_length);
-					sim->bonded_pairs.insert({minID, maxID});
+					newres.addBond(sphaID, sphbID, sphereMap, stiffness, equil_length);
+					sim->bonded_pairs.insert({sphaID, sphbID});
 
 				}
 
@@ -196,11 +224,8 @@ void MD::loadConfig()
 				sphereMap[sphaID] = loadedspheres[sphaID];
 				sphereMap[sphbID] = loadedspheres[sphbID];
 
-				int minID = std::min(sphaID, sphbID);
-                    		int maxID = std::max(sphaID, sphbID);
-				
-				sim->addBackBonePair(minID, maxID, sphereMap, stiffness, equil_length);
-				sim->bonded_pairs.insert({minID, maxID});
+				sim->addBackBonePair(sphaID, sphbID, sphereMap, stiffness, equil_length);
+				sim->bonded_pairs.insert({sphaID, sphbID});
 
 			}
 			// otherwise we need to find the correct sphere object...
@@ -229,11 +254,8 @@ void MD::loadConfig()
 
 				}
 
-				int minID = std::min(sphaID, sphbID);
-                    		int maxID = std::max(sphaID, sphbID);
-				
-				sim->addBackBonePair(minID, maxID, sphereMap, stiffness, equil_length);
-				sim->bonded_pairs.insert({minID, maxID});
+				sim->addBackBonePair(sphaID, sphbID, sphereMap, stiffness, equil_length);
+				sim->bonded_pairs.insert({sphaID, sphbID});
 			}
 
 		}
@@ -367,10 +389,31 @@ void MD::loadConfig()
 
 	}
 
+	// EOF flush: ensure the last residue is not dropped.
+	// - last_label == "ATOM": residue had no INTRA_RESIDUE section, so spheres are buffered in newspheres.
+	// - last_label == "INTRA_RESIDUE": residue exists in `newres`, but the usual label-change trigger never fires at EOF.
+	if(last_label=="ATOM")
+	{
+		finalizeBufferedResidue();
+	}
+	else if(last_label=="INTRA_RESIDUE")
+	{
+		sim->addResidues(newres);
+		newres = Residue();
+		current_resID = -1;
+	}
+
 	std::cout<<"Natoms: "<<atom_counter<<"\n";
 	std::cout<<"Nres: "<<res_counter<<"\n";
 
 }
+
+
+
+
+
+
+
 
 
 

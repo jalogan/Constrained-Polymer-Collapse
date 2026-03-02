@@ -6,7 +6,7 @@
 
 
 
-void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
+void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file, bool write_traj_file)
 {
 
 	std::ofstream output;
@@ -17,6 +17,8 @@ void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
 	std::string vis_file;
 	std::string final_config_file = "final_config.xyzr";
 	std::string damping_progress_file = "temp_rg_Etot.txt";
+	std::string traj_file = "traj.xyzr";
+
 
 	if(overwrite_files)
 	{
@@ -73,9 +75,10 @@ void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
 				output<<"INTRA_RESIDUE,"<<bond.sphereIDs[0]<<","<<bond.sphereIDs[1]<<","<<bond.stiffness<<","<<bond.bond_length<<"\n";
 			}
 			if(res.bonds.empty())
-            {
-                output<<"INTRA_RESIDUE\n";
-            }
+			{
+				output<<"INTRA_RESIDUE\n";
+			}
+
 		}
 
 
@@ -193,9 +196,41 @@ void MD::writeFiles(int step, bool overwrite_files, bool write_vis_file)
 				}
 			}
 		}
+
+		output.close();
 	}
 
 
+
+
+	// OVITO trajectory (XYZR)
+	if(write_traj_file)
+	{
+		std::ios_base::openmode traj_mode = std::ios_base::app;
+		if(step == 0)
+		{
+			// Start a fresh trajectory each run.
+			traj_mode = std::ios::out;
+		}
+
+		output.open(OUT + traj_file, traj_mode);
+		if(output.is_open())
+		{
+			const std::size_t N = sim->spheres.size();
+			output << N << "\n";
+			output << "Timestep " << step << "\n";
+
+			for(const auto& sph_ptr : sim->spheres)
+			{
+				const auto* sph = sph_ptr.get();
+				output << sph->position.x << " "
+					   << sph->position.y << " "
+					   << sph->position.z << " "
+					   << 0.5 * sph->diameter << "\n";
+			}
+		}
+		output.close();
+	}
 
 
 

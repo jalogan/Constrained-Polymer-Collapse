@@ -41,7 +41,7 @@ class MD
 		void runDampedMD();
 		void dampedMD();
 		void adjust_dt();
-		void writeFiles(int step, bool overwrite_files=1, bool write_vis_file=0);
+		void writeFiles(int step, bool overwrite_files=1, bool write_vis_file=0, bool write_traj_file=1);
 		void loadConfig();
 
 
